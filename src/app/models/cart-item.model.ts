@@ -1,0 +1,9 @@
+// src/app/models/cart-item.model.ts
+
+import { Product } from './product.model';
+
+export interface CartItem {
+  product: Product;
+  selectedSize: string;
+  quantity: number;
+}

@@ -1,0 +1,43 @@
+/* src/app/components/signup-modal/signup-modal.component.css */
+/* Styles for the simple div based modal */
+/* This component relies heavily on the global .modal and .modal-content styles. */
+
+.modal-content h3 {
+  margin-top: 0;
+  color: var(--text-color);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 10px;
+  margin-bottom: 25px;
+  font-size: 1.8em;
+  text-align: center;
+}
+
+.modal-content ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0 0 20px 0;
+}
+
+.modal-content ul li {
+  margin-bottom: 8px;
+  color: var(--danger-color);
+  font-size: 0.95em;
+  text-align: left;
+  line-height: 1.4;
+}
+
+/* Inherit button styling from global styles */
+.modal-content button.button {
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  border: 1px solid var(--primary-dark-color);
+  width: 100%;
+  padding: 12px;
+  margin-top: 20px;
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+.modal-content button.button:hover {
+  background-color: var(--primary-dark-color);
+}

@@ -1,0 +1,91 @@
+/* src/app/components/filter-modal/filter-modal.component.css */
+/* Styles for the simple div based modal */
+/* Many base modal styles are now inherited from global styles.css */
+
+.modal-content {
+  /* Overrides or specific adjustments for this modal */
+  padding: 30px;
+}
+
+.modal-content h3 {
+  margin-top: 0;
+  color: var(--light-text-color);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 10px;
+  margin-bottom: 25px;
+  font-size: 1.8em;
+  text-align: center;
+}
+
+.filter-section {
+  margin-bottom: 25px;
+  padding: 15px;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  background-color: #fcfcfc;
+}
+
+.filter-section h4 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: var(--light-text-color);
+  font-size: 1.2em;
+}
+
+.price-range-inputs {
+  display: flex;
+  flex-wrap: wrap; /* Allow wrapping */
+  align-items: center;
+  gap: 15px;
+  justify-content: space-between;
+}
+
+.price-range-inputs label {
+  font-size: 0.95em;
+  color: var(--light-text-color);
+  font-weight: bold;
+  flex-basis: 30%; /* Give labels some space */
+}
+
+.price-range-inputs input.input-field {
+  width: auto;
+  flex-grow: 1; /* Allow inputs to grow */
+  min-width: 80px;
+  padding: 8px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  box-sizing: border-box;
+  text-align: center;
+  font-size: 0.9em;
+  color: var(--text-color);
+}
+
+.category-checkboxes label {
+  display: flex; /* Use flex for alignment */
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 1em;
+  color: var(--light-text-color);
+  cursor: pointer;
+}
+
+.category-checkboxes input[type="checkbox"] {
+  margin-right: 10px;
+  transform: scale(1.1);
+  accent-color: var(--primary-color); /* Highlight checkbox */
+}
+
+.modal-content button.button {
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  border: 1px solid var(--primary-dark-color);
+  width: 100%;
+  padding: 12px;
+  margin-top: 25px;
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+.modal-content button.button:hover {
+  background-color: var(--primary-dark-color);
+}

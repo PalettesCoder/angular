@@ -1,0 +1,202 @@
+<!-- src/app/components/checkout/checkout.component.html -->
+<div class="checkout-container">
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <a routerLink="/">Home</a> <span>/</span> <a routerLink="/cart">Cart</a> <span>/</span> <span>Checkout</span>
+  </div>
+
+  <!-- Order Success Message -->
+  <div *ngIf="orderPlaced" class="success-message">
+    <div class="success-content">
+      <i class="fas fa-check-circle"></i>
+      <h2>Order Placed Successfully!</h2>
+      <p>Thank you for your purchase. Your order has been confirmed.</p>
+      <p class="order-id">Order ID: #{{ generateOrderID() }}</p>
+      <a routerLink="/products" class="continue-btn">Continue Shopping</a>
+    </div>
+  </div>
+
+  <!-- Checkout Form -->
+  <div *ngIf="!orderPlaced" class="checkout-content">
+    <div class="checkout-form-section">
+      <h2>Shipping Information</h2>
+      <form>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstName">First Name *</label>
+            <input
+              type="text"
+              id="firstName"
+              [(ngModel)]="orderForm.firstName"
+              name="firstName"
+              placeholder="John"
+              required
+            >
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last Name *</label>
+            <input
+              type="text"
+              id="lastName"
+              [(ngModel)]="orderForm.lastName"
+              name="lastName"
+              placeholder="Doe"
+              required
+            >
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email">Email *</label>
+            <input
+              type="email"
+              id="email"
+              [(ngModel)]="orderForm.email"
+              name="email"
+              placeholder="john@example.com"
+              required
+            >
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone *</label>
+            <input
+              type="tel"
+              id="phone"
+              [(ngModel)]="orderForm.phone"
+              name="phone"
+              placeholder="+1 (555) 123-4567"
+              required
+            >
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="address">Street Address *</label>
+          <input
+            type="text"
+            id="address"
+            [(ngModel)]="orderForm.address"
+            name="address"
+            placeholder="123 Main St"
+            required
+          >
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="city">City *</label>
+            <input
+              type="text"
+              id="city"
+              [(ngModel)]="orderForm.city"
+              name="city"
+              placeholder="New York"
+              required
+            >
+          </div>
+          <div class="form-group">
+            <label for="state">State *</label>
+            <input
+              type="text"
+              id="state"
+              [(ngModel)]="orderForm.state"
+              name="state"
+              placeholder="NY"
+              required
+            >
+          </div>
+          <div class="form-group">
+            <label for="zipCode">Zip Code *</label>
+            <input
+              type="text"
+              id="zipCode"
+              [(ngModel)]="orderForm.zipCode"
+              name="zipCode"
+              placeholder="10001"
+              required
+            >
+          </div>
+        </div>
+      </form>
+
+      <h2 style="margin-top: 30px;">Payment Information</h2>
+      <form>
+        <div class="form-group">
+          <label for="cardNumber">Card Number *</label>
+          <input
+            type="text"
+            id="cardNumber"
+            [(ngModel)]="orderForm.cardNumber"
+            name="cardNumber"
+            placeholder="1234 5678 9012 3456"
+            required
+          >
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="cardExpiry">Expiry Date *</label>
+            <input
+              type="text"
+              id="cardExpiry"
+              [(ngModel)]="orderForm.cardExpiry"
+              name="cardExpiry"
+              placeholder="MM/YY"
+              required
+            >
+          </div>
+          <div class="form-group">
+            <label for="cardCVV">CVV *</label>
+            <input
+              type="text"
+              id="cardCVV"
+              [(ngModel)]="orderForm.cardCVV"
+              name="cardCVV"
+              placeholder="123"
+              required
+            >
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Order Summary -->
+    <aside class="order-summary-section">
+      <h2>Order Summary</h2>
+
+      <div *ngIf="(cartItems$ | async)?.length === 0" class="empty-cart-message">
+        <p>Your cart is empty. <a routerLink="/products">Continue shopping</a></p>
+      </div>
+
+      <div *ngIf="(cartItems$ | async)?.length! > 0" class="order-items">
+        <div *ngFor="let item of cartItems$ | async" class="order-item">
+          <div class="item-image-section">
+            <img [src]="item.product.imageUrls[0]" alt="{{ item.product.name }}" class="item-image">
+          </div>
+          <div class="item-info-section">
+            <h4>{{ item.product.name }}</h4>
+            <p class="item-size">Size: {{ item.selectedSize }}</p>
+            <p class="item-qty">Qty: {{ item.quantity }}</p>
+          </div>
+          <div class="item-price">
+            ₹{{ getItemSubtotal(item) | number:'1.2-2' }}
+          </div>
+        </div>
+
+        <div class="order-total">
+          <h3>Total: ₹{{ totalPrice$ | async | number:'1.2-2' }}</h3>
+        </div>
+
+        <div class="checkout-actions">
+          <button class="button checkout-button" (click)="placeOrder()" [disabled]="!isFormValid()">
+            Place Order
+          </button>
+          <button class="button btn-ghost cancel-button" (click)="cancelCheckout()">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>

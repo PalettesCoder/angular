@@ -1,0 +1,176 @@
+<!-- src/app/components/my-profile/my-profile.component.html -->
+<div class="profile-container">
+  <!-- Breadcrumb Navigation -->
+  <div class="breadcrumb">
+    <a routerLink="/">Home</a>
+    <span>›</span>
+    <a routerLink="/profile">My Profile</a>
+  </div>
+
+  <h2>My Profile</h2>
+
+  <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
+  <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+  <!-- Profile Tabs -->
+  <div class="profile-tabs">
+    <button 
+      *ngFor="let tab of profileTabs" 
+      (click)="selectTab(tab)"
+      [class.active]="activeTab === tab"
+      class="tab-button">
+      {{ tab }}
+    </button>
+  </div>
+
+  <!-- Tab Content: Personal Information -->
+  <div *ngIf="activeTab === 'Personal Information'" class="tab-content">
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="name">Name:</label>
+        <input id="name" type="text" formControlName="name" class="input-field"
+               [ngClass]="{ 'is-invalid': f['name'].invalid && (f['name'].dirty || f['name'].touched) }" />
+        <div *ngIf="f['name'].invalid && (f['name'].dirty || f['name'].touched)" class="error-message">
+          <div *ngIf="f['name'].errors?.['required']">Name is required.</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input id="email" type="text" formControlName="email" class="input-field" readonly />
+        <span class="masked-info">
+          Displayed: {{ currentUser?.email ? maskEmail(currentUser!.email) : '' }}
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="phoneNumber">Phone Number:</label>
+        <input id="phoneNumber" type="tel" formControlName="phoneNumber" class="input-field"
+               [ngClass]="{ 'is-invalid': f['phoneNumber'].invalid && (f['phoneNumber'].dirty || f['phoneNumber'].touched) }" />
+        <div *ngIf="f['phoneNumber'].invalid && (f['phoneNumber'].dirty || f['phoneNumber'].touched)" class="error-message">
+          <div *ngIf="f['phoneNumber'].errors?.['required']">Phone Number is required.</div>
+          <div *ngIf="f['phoneNumber'].errors?.['pattern']">Phone Number must be 10 digits.</div>
+        </div>
+        <span class="masked-info">
+          Displayed: {{ currentUser?.phoneNumber ? maskPhoneNumber(currentUser!.phoneNumber) : '' }}
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label>Gender:</label>
+        <div class="radio-group">
+          <label *ngFor="let g of genders" class="radio-label">
+            <input type="radio" [value]="g" formControlName="gender"> {{ g }}
+          </label>
+        </div>
+        <div *ngIf="f['gender'].invalid && (f['gender'].dirty || f['gender'].touched)" class="error-message">
+          <div *ngIf="f['gender'].errors?.['required']">Gender is required.</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Interests:</label>
+        <div class="checkbox-group">
+          <label *ngFor="let i of interests" class="checkbox-label">
+            <input type="checkbox" [value]="i" (change)="onInterestChange($event)"
+                   [checked]="isInterestSelected(i)"> {{ i }}
+          </label>
+        </div>
+        <div *ngIf="f['interests'].invalid && (f['interests'].dirty || f['interests'].touched)" class="error-message">
+          <div *ngIf="f['interests'].errors?.['required']">At least one interest is required.</div>
+        </div>
+      </div>
+
+      <button type="submit" class="button" [disabled]="profileForm.invalid || !profileForm.dirty">Update Profile</button>
+    </form>
+  </div>
+
+  <!-- Tab Content: Purchased Products -->
+  <div *ngIf="activeTab === 'Purchased Products'" class="tab-content">
+    <div class="section-header" (click)="toggleSection('purchases')">
+      <span class="section-title">Your Purchase History</span>
+      <i [class]="expandedSections['purchases'] ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"></i>
+    </div>
+    <div *ngIf="expandedSections['purchases']" class="section-content">
+      <div *ngIf="purchases.length === 0" class="empty-state">
+        <i class="fas fa-shopping-bag"></i>
+        <p>No purchases yet</p>
+        <a routerLink="/products" class="continue-shopping-link">Continue Shopping</a>
+      </div>
+      <div *ngIf="purchases.length > 0" class="purchases-list">
+        <div *ngFor="let purchase of purchases" class="purchase-card">
+          <div class="purchase-header">
+            <div class="purchase-info">
+              <h4>Order #{{ purchase.orderId }}</h4>
+              <p class="purchase-date">{{ purchase.orderDate }}</p>
+              <p class="purchase-address">{{ purchase.city }}, {{ purchase.state }} {{ purchase.zipCode }}</p>
+            </div>
+            <div class="purchase-summary">
+              <span class="purchase-status" [ngClass]="'status-' + purchase.status.toLowerCase()">
+                {{ purchase.status }}
+              </span>
+              <p class="purchase-total">Total: <strong>₹{{ purchase.totalAmount | number:'1.2-2' }}</strong></p>
+            </div>
+          </div>
+          <div class="purchase-items">
+            <div *ngFor="let item of purchase.items" class="purchase-item">
+              <div class="item-image">
+                <img [src]="item.product.imageUrls[0]" [alt]="item.product.name">
+              </div>
+              <div class="item-details">
+                <h5>{{ item.product.name }}</h5>
+                <p class="item-price">₹{{ item.product.price | number:'1.2-2' }} x {{ item.quantity }}</p>
+                <p class="item-size" *ngIf="item.selectedSize">Size: {{ item.selectedSize }}</p>
+                <p class="item-subtotal">Subtotal: ₹{{ (item.product.price * item.quantity) | number:'1.2-2' }}</p>
+              </div>
+              <button (click)="buyAgain(item)" class="buy-again-btn">
+                <i class="fas fa-redo"></i> Buy Again
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab Content: Change Password -->
+  <div *ngIf="activeTab === 'Change Password'" class="tab-content">
+    <form [formGroup]="changePasswordForm" (ngSubmit)="onChangePassword()" class="change-password-form">
+      <div class="form-group">
+        <label for="currentPassword">Current Password:</label>
+        <input id="currentPassword" type="password" formControlName="currentPassword" class="input-field"
+               [ngClass]="{ 'is-invalid': cp['currentPassword'].invalid && (cp['currentPassword'].dirty || cp['currentPassword'].touched) }" />
+        <div *ngIf="cp['currentPassword'].invalid && (cp['currentPassword'].dirty || cp['currentPassword'].touched)" class="error-message">
+          <div *ngIf="cp['currentPassword'].errors?.['required']">Current password is required.</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="newPassword">New Password:</label>
+        <input id="newPassword" type="password" formControlName="newPassword" class="input-field"
+               [ngClass]="{ 'is-invalid': cp['newPassword'].invalid && (cp['newPassword'].dirty || cp['newPassword'].touched) }" />
+        <div *ngIf="cp['newPassword'].invalid && (cp['newPassword'].dirty || cp['newPassword'].touched)" class="error-message">
+          <div *ngIf="cp['newPassword'].errors?.['required']">New password is required.</div>
+          <div *ngIf="cp['newPassword'].errors?.['minlength']">Password must be at least 6 characters.</div>
+          <div *ngIf="cp['newPassword'].errors?.['pattern']">Password must contain at least one uppercase letter, one lowercase letter, and one digit.</div>
+        </div>
+        <span class="password-hint">At least 6 characters, one uppercase, one lowercase, one digit</span>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirm New Password:</label>
+        <input id="confirmPassword" type="password" formControlName="confirmPassword" class="input-field"
+               [ngClass]="{ 'is-invalid': cp['confirmPassword'].invalid && (cp['confirmPassword'].dirty || cp['confirmPassword'].touched) }" />
+        <div *ngIf="cp['confirmPassword'].invalid && (cp['confirmPassword'].dirty || cp['confirmPassword'].touched)" class="error-message">
+          <div *ngIf="cp['confirmPassword'].errors?.['required']">Confirm password is required.</div>
+          <div *ngIf="changePasswordForm.errors?.['passwordMismatch']">Passwords do not match.</div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="button" [disabled]="changePasswordForm.invalid">Change Password</button>
+        <button type="button" (click)="resetPasswordForm()" class="button secondary">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>

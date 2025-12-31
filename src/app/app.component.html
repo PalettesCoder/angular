@@ -1,0 +1,43 @@
+<header class="header header-sticky">
+  <div class="container header-inner">
+    <a class="logo" routerLink="/" (click)="closeMobileMenu()">eCommerce</a>
+
+    <!-- Hamburger Menu Button (Mobile Only) -->
+    <button class="hamburger-menu" (click)="toggleMobileMenu()" [class.active]="mobileMenuOpen" aria-label="Toggle menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <form class="search-bar" (ngSubmit)="onSearch()" role="search">
+      <select class="category-select" [(ngModel)]="searchCategory" name="category" (change)="onCategoryChange()">
+        <option value="all">All</option>
+        <option value="Smartphones & Tablets">Mobiles & Tablets</option>
+        <option value="Laptops & PCs">Laptops & PCs</option>
+        <option value="Headphones & Audio">Audio</option>
+        <option value="Smart Watches & Wearables">Wearables</option>
+        <option value="Gaming Consoles & Accessories">Gaming</option>
+        <option value="Cameras & Smart Home Devices">Smart Home</option>
+      </select>
+      <input class="search-input" type="search" name="query" [(ngModel)]="searchQuery" placeholder="Search mobiles, laptops, accessories…" />
+      <button class="search-button" type="submit" aria-label="Search"><i class="fas fa-search"></i></button>
+    </form>
+
+    <nav [class.active]="mobileMenuOpen">
+      <a routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}" (click)="closeMobileMenu()">Home</a>
+      <a routerLink="/products" routerLinkActive="active-link" (click)="closeMobileMenu()">Products</a>
+      <ng-container *ngIf="!isLoggedIn">
+        <a routerLink="/login" routerLinkActive="active-link" (click)="closeMobileMenu()">Login</a>
+      </ng-container>
+      <ng-container *ngIf="isLoggedIn">
+        <a routerLink="/cart" routerLinkActive="active-link" (click)="closeMobileMenu()"><i class="fas fa-shopping-cart" aria-hidden="true"></i> My Cart <span class="cart-count" *ngIf="(cartItemCount | async) as count">{{count}}</span></a>
+        <a routerLink="/profile" routerLinkActive="active-link" (click)="closeMobileMenu()">My Profile</a>
+        <a (click)="logout()" class="logout-link">Logout</a>
+      </ng-container>
+    </nav>
+  </div>
+</header>
+
+<div class="container">
+  <router-outlet></router-outlet>
+</div>

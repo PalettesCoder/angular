@@ -1,0 +1,34 @@
+<div class="best-sellers-container">
+  <div class="best-sellers-grid">
+    <div *ngFor="let product of products" class="best-seller-card" [routerLink]="['/product', product.id]">
+      <div class="bs-image-container">
+        <img [src]="product.imageUrls[0]" alt="{{ product.name }}" class="bs-product-image">
+        <div *ngIf="product.badge" class="bs-badge">{{ product.badge }}</div>
+        <div class="bs-hover-overlay">
+          <button class="bs-quick-view" (click)="$event.preventDefault()" title="Quick View">
+            <i class="fas fa-eye"></i> Quick View
+          </button>
+        </div>
+      </div>
+      
+      <div class="bs-product-info">
+        <h3 class="bs-product-name">{{ product.name }}</h3>
+        <p class="bs-product-subtitle">{{ product.subtitle }}</p>
+        
+        <div class="bs-rating-box" *ngIf="product.rating">
+          <div class="bs-stars">⭐⭐⭐⭐⭐</div>
+          <span class="bs-rating-score">{{ product.rating }}</span>
+          <span class="bs-review-count">({{ product.reviewCount }})</span>
+        </div>
+        
+        <div class="bs-price-container">
+          <span class="bs-price">₹{{ product.price | number:'1.2-2' }}</span>
+        </div>
+        
+        <button class="bs-add-btn" (click)="$event.preventDefault()" title="Add to Cart">
+          <i class="fas fa-shopping-cart"></i> Add to Cart
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

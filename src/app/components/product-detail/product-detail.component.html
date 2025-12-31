@@ -1,0 +1,113 @@
+<!-- src/app/components/product-detail/product-detail.component.html -->
+<div *ngIf="product" class="product-detail-container">
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <a routerLink="/">Home</a> <span>/</span> <a routerLink="/products">Products</a> <span>/</span> <span>{{ product.name | slice:0:50 }}</span>
+  </div>
+
+  <div class="product-detail-wrapper">
+    <!-- Image Section -->
+    <div class="product-image-section">
+      <div class="main-image-container">
+        <img [src]="product.imageUrls[currentImageIndex]" alt="{{ product.name }}" class="product-main-image">
+        <div *ngIf="product.badge" class="badge">{{ product.badge }}</div>
+      </div>
+      
+      <div class="image-thumbnails" *ngIf="product.imageUrls.length > 1">
+        <div *ngFor="let image of product.imageUrls; let i = index" 
+             class="thumbnail" 
+             [class.active]="i === currentImageIndex"
+             (click)="setImageIndex(i)">
+          <img [src]="image" alt="Thumbnail {{ i + 1 }}">
+        </div>
+      </div>
+    </div>
+
+    <!-- Info Section -->
+    <div class="product-info-section">
+      <h1>{{ product.name }}</h1>
+      <p class="subtitle">{{ product.subtitle }}</p>
+
+      <!-- Rating -->
+      <div class="rating-block" *ngIf="product.rating">
+        <div class="rating-stars">
+          <span class="stars">★★★★★</span>
+          <span class="rating-value">{{ product.rating }}</span>
+        </div>
+        <span class="review-count">({{ product.reviewCount }} reviews)</span>
+      </div>
+
+      <!-- Price -->
+      <div class="price-block">
+        <span class="price">₹{{ product.price | number:'1.2-2' }}</span>
+        <span class="availability" [class.in-stock]="selectedSize && product.stock[selectedSize] > 0">
+          {{ selectedSize && product.stock[selectedSize] > 0 ? '✓ In Stock' : 'Select Options' }}
+        </span>
+      </div>
+
+      <!-- Description -->
+      <div class="description">
+        <h3>About this item</h3>
+        <p>{{ product.description }}</p>
+      </div>
+
+      <!-- Shipping & Returns Info -->
+      <div class="shipping-info">
+        <p><i class="fas fa-truck"></i> Free shipping on orders over $50</p>
+        <p><i class="fas fa-undo"></i> 30-day returns</p>
+      </div>
+    </div>
+
+    <!-- Buy Box (Right Sidebar) -->
+    <aside class="buy-box">
+      <div class="price-section">
+        <span class="price">₹{{ product.price | number:'1.2-2' }}</span>
+        <span class="availability-badge" [class.in-stock]="selectedSize && product.stock[selectedSize] > 0">
+          {{ selectedSize && product.stock[selectedSize] > 0 ? 'In Stock' : 'Out of Stock' }}
+        </span>
+      </div>
+
+      <!-- Size Selection -->
+      <div class="size-selection">
+        <label>Select Option:</label>
+        <div class="size-options">
+          <button *ngFor="let size of product.availableSizes"
+                  class="size-btn"
+                  [class.selected]="selectedSize === size"
+                  [disabled]="!isSizeAvailable(size)"
+                  (click)="onSelectSize(size)">
+            {{ size }}
+          </button>
+        </div>
+        <div class="stock-info" *ngIf="selectedSize">
+          <p>{{ product.stock[selectedSize] }} items available</p>
+        </div>
+      </div>
+
+      <div class="quantity-section">
+        <label>Quantity:</label>
+        <select [(ngModel)]="quantity" class="quantity-select" *ngIf="selectedSize">
+          <option *ngFor="let q of getQuantityOptions()" [value]="q">{{ q }}</option>
+        </select>
+        <p class="quantity-note" *ngIf="!selectedSize">Select size first</p>
+      </div>
+
+      <button class="add-to-cart-btn" (click)="addToCart()" [disabled]="!selectedSize">
+        <i class="fas fa-shopping-cart"></i> Add to Cart
+      </button>
+
+      <button class="buy-now-btn" (click)="buyNow()" [disabled]="!selectedSize">
+        <i class="fas fa-bolt"></i> Buy Now
+      </button>
+
+      <div class="guarantee-badge">
+        <i class="fas fa-shield-alt"></i> Secure transaction
+      </div>
+    </aside>
+  </div>
+</div>
+
+<div *ngIf="!product" class="product-not-found">
+  <p>Product not found.</p>
+  <button class="back-btn" routerLink="/products">← Back to Products</button>
+</div>

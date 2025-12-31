@@ -1,0 +1,6 @@
+<!-- src/app/components/quantity/quantity.component.html -->
+<div class="quantity-selector">
+  <button (click)="decrement()" [disabled]="quantity <= 1">-</button>
+  <span>{{ quantity }}</span>
+  <button (click)="increment()" [disabled]="quantity >= maxQuantity">+</button>
+</div>

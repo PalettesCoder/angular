@@ -1,0 +1,12 @@
+<!-- src/app/components/signup-modal/signup-modal.component.html -->
+<div class="modal">
+  <div class="modal-content">
+    <span class="close-button" (click)="closeModal()">&times;</span>
+    <h3>Validation Errors</h3>
+    <ul *ngIf="messages.length > 0">
+      <li *ngFor="let msg of messages" class="error-message">{{ msg }}</li>
+    </ul>
+    <p *ngIf="messages.length === 0">No errors to display.</p>
+    <button class="button" (click)="closeModal()">Close</button>
+  </div>
+</div>

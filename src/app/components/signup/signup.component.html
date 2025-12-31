@@ -1,0 +1,99 @@
+<!-- src/app/components/signup/signup.component.html -->
+<div class="signup-container">
+  <h2>Sign Up</h2>
+  <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input
+        id="name"
+        type="text"
+        formControlName="name"
+        class="input-field"
+        [ngClass]="{ 'is-invalid': f['name'].invalid && (f['name'].dirty || f['name'].touched) }"
+      />
+      <div *ngIf="f['name'].invalid && (f['name'].dirty || f['name'].touched)" class="error-message">
+        <div *ngIf="f['name'].errors?.['required']">Name is required.</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input
+        id="email"
+        type="email"
+        formControlName="email"
+        class="input-field"
+        [ngClass]="{ 'is-invalid': f['email'].invalid && (f['email'].dirty || f['email'].touched) }"
+      />
+      <div *ngIf="f['email'].invalid && (f['email'].dirty || f['email'].touched)" class="error-message">
+        <div *ngIf="f['email'].errors?.['required']">Email is required.</div>
+        <div *ngIf="f['email'].errors?.['email']">Email must be a valid email address.</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="phoneNumber">Phone Number:</label>
+      <input
+        id="phoneNumber"
+        type="tel"
+        formControlName="phoneNumber"
+        class="input-field"
+        [ngClass]="{ 'is-invalid': f['phoneNumber'].invalid && (f['phoneNumber'].dirty || f['phoneNumber'].touched) }"
+      />
+      <div *ngIf="f['phoneNumber'].invalid && (f['phoneNumber'].dirty || f['phoneNumber'].touched)" class="error-message">
+        <div *ngIf="f['phoneNumber'].errors?.['required']">Phone Number is required.</div>
+        <div *ngIf="f['phoneNumber'].errors?.['pattern']">Phone Number must be 10 digits.</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Gender:</label>
+      <div class="radio-group">
+        <label *ngFor="let g of genders" class="radio-label">
+          <input type="radio" [value]="g" formControlName="gender"> {{ g }}
+        </label>
+      </div>
+      <div *ngIf="f['gender'].invalid && (f['gender'].dirty || f['gender'].touched)" class="error-message">
+        <div *ngIf="f['gender'].errors?.['required']">Gender is required.</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Interests:</label>
+      <div class="checkbox-group">
+        <label *ngFor="let i of interests" class="checkbox-label">
+          <input type="checkbox" [value]="i" (change)="onInterestChange($event)"> {{ i }}
+        </label>
+      </div>
+      <div *ngIf="f['interests'].invalid && (f['interests'].dirty || f['interests'].touched)" class="error-message">
+        <div *ngIf="f['interests'].errors?.['required']">At least one interest is required.</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password:</label>
+      <input
+        id="password"
+        type="password"
+        formControlName="password"
+        class="input-field"
+        [ngClass]="{ 'is-invalid': f['password'].invalid && (f['password'].dirty || f['password'].touched) }"
+      />
+      <div *ngIf="f['password'].invalid && (f['password'].dirty || f['password'].touched)" class="error-message">
+        <div *ngIf="f['password'].errors?.['required']">Password is required.</div>
+        <div *ngIf="f['password'].errors?.['minlength']">Password must be at least 6 characters.</div>
+        <div *ngIf="f['password'].errors?.['pattern']">Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.</div>
+      </div>
+    </div>
+
+    <button type="submit" class="button">Sign Up</button>
+  </form>
+  <p>Already have an account? <a routerLink="/login">Login</a></p>
+
+  <!-- Signup Validation Error Modal -->
+  <app-signup-modal
+    *ngIf="isModalOpen"
+    [messages]="modalMessages"
+    (closeModalEvent)="closeModal()">
+  </app-signup-modal>
+</div>

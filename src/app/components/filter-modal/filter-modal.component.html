@@ -1,0 +1,43 @@
+<!-- src/app/components/filter-modal/filter-modal.component.html -->
+<div class="modal">
+  <div class="modal-content">
+    <span class="close-button" (click)="closeModal()">&times;</span>
+    <h3>Filter Products</h3>
+
+    <div class="filter-section">
+      <h4>Price Range</h4>
+      <div class="price-range-inputs">
+        <label for="minPrice">Min Price:</label>
+        <input type="number" id="minPrice" [(ngModel)]="localMinPrice" class="input-field">
+        <label for="maxPrice">Max Price:</label>
+        <input type="number" id="maxPrice" [(ngModel)]="localMaxPrice" class="input-field">
+      </div>
+    </div>
+
+    <div class="filter-section">
+      <h4>Categories</h4>
+      <div class="category-checkboxes">
+        <label>
+          <input type="checkbox" [(ngModel)]="localSelectedCategories['Smartphones & Tablets']"> Smartphones & Tablets
+        </label>
+        <label>
+          <input type="checkbox" [(ngModel)]="localSelectedCategories['Laptops & PCs']"> Laptops & PCs
+        </label>
+        <label>
+          <input type="checkbox" [(ngModel)]="localSelectedCategories['Headphones & Audio']"> Headphones & Audio
+        </label>
+        <label>
+          <input type="checkbox" [(ngModel)]="localSelectedCategories['Smart Watches & Wearables']"> Smart Watches & Wearables
+        </label>
+        <label>
+          <input type="checkbox" [(ngModel)]="localSelectedCategories['Gaming Consoles & Accessories']"> Gaming Consoles
+        </label>
+        <label>
+          <input type="checkbox" [(ngModel)]="localSelectedCategories['Cameras & Smart Home Devices']"> Smart Home Devices
+        </label>
+      </div>
+    </div>
+
+    <button class="button" (click)="applyFilters()">Apply Filters</button>
+  </div>
+</div>

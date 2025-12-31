@@ -1,0 +1,93 @@
+<!-- src/app/components/product-list/product-list.component.html -->
+<div class="product-list-container">
+  <div class="breadcrumb">
+    <a routerLink="/">Home</a> <span>/</span> <span>Products</span>
+  </div>
+
+  <div class="products-wrapper">
+    <!-- Sidebar Filters -->
+    <aside class="filters-sidebar">
+      <h3>Filters</h3>
+      
+      <div class="filter-group">
+        <h4>Price Range</h4>
+        <div class="price-inputs">
+          <input type="number" placeholder="Min" [(ngModel)]="minPrice" (change)="applyFilters()" class="price-input">
+          <span>—</span>
+          <input type="number" placeholder="Max" [(ngModel)]="maxPrice" (change)="applyFilters()" class="price-input">
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <h4>Categories</h4>
+        <div class="category-list">
+          <label *ngFor="let cat of ['Smartphones & Tablets', 'Laptops & PCs', 'Headphones & Audio', 'Smart Watches & Wearables', 'Gaming Consoles & Accessories', 'Cameras & Smart Home Devices']">
+            <input type="checkbox" [checked]="selectedCategories.includes(cat)" (change)="onCategoryToggle(cat)">
+            <span>{{ cat }}</span>
+          </label>
+        </div>
+      </div>
+
+      <button class="clear-filters" (click)="clearFilters()">Clear All</button>
+    </aside>
+
+    <!-- Main Products Area -->
+    <div class="main-products">
+      <div class="results-header">
+        <h2>Products</h2>
+        <div class="result-count">Showing {{ filteredProducts.length }} results</div>
+      </div>
+
+      <div *ngIf="filteredProducts.length === 0" class="no-products">
+        <p>No products found. Try adjusting your filters.</p>
+      </div>
+
+      <div class="product-grid">
+        <div *ngFor="let product of filteredProducts" class="product-card" [routerLink]="['/product', product.id]">
+          <div class="product-image-wrapper">
+            <img 
+              [src]="product.imageUrls[0]" 
+              alt="{{ product.name }}"
+              class="product-image"
+            >
+            <div *ngIf="product.badge" class="product-badge">{{ product.badge }}</div>
+            <div class="quick-actions">
+              <button class="action-btn" title="Quick View" (click)="$event.preventDefault(); quickViewProduct(product)">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="product-details" (click)="$event.preventDefault()">
+            <h3 class="product-name">{{ product.name }}</h3>
+            <p class="product-subtitle">{{ product.subtitle }}</p>
+            
+            <div class="rating-section" *ngIf="product.rating">
+              <span class="rating">{{ product.rating }}</span>
+              <span class="stars">★★★★★</span>
+              <span class="reviews">({{ product.reviewCount }})</span>
+            </div>
+
+            <div class="price-section">
+              <span class="price">₹{{ product.price | number:'1.2-2' }}</span>
+            </div>
+
+            <button class="add-to-cart-btn" (click)="$event.preventDefault()" title="Add to Cart">
+              <i class="fas fa-shopping-cart"></i> Add
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filter Modal -->
+  <app-filter-modal
+    *ngIf="isFilterModalOpen"
+    [minPrice]="minPrice"
+    [maxPrice]="maxPrice"
+    [selectedCategories]="selectedCategories"
+    (applyFiltersEvent)="onFiltersApplied($event)"
+    (closeModalEvent)="toggleFilterModal()">
+  </app-filter-modal>
+</div>
