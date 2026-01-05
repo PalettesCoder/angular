@@ -112,7 +112,7 @@
               <p class="purchase-total">Total: <strong>₹{{ purchase.totalAmount | number:'1.2-2' }}</strong></p>
             </div>
           </div>
-          <div class="purchase-items">
+          <div class="purchase-items-grid">
             <div *ngFor="let item of purchase.items" class="purchase-item">
               <div class="item-image">
                 <img [src]="item.product.imageUrls[0]" [alt]="item.product.name">

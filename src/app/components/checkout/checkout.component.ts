@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CartService } from '../../services/cart.service';
+import { AuthService } from '../../services/auth.service';
 import { CartItem } from '../../models/cart-item.model';
 import { Purchase } from '../../models/purchase.model';
 import { Observable } from 'rxjs';
@@ -46,9 +47,17 @@ export class CheckoutComponent implements OnInit {
     cardCVV: ''
   };
 
-  constructor(private cartService: CartService, private router: Router) { }
+  constructor(private cartService: CartService, private authService: AuthService, private router: Router) { }
 
   ngOnInit(): void {
+    // Check if user is logged in
+    if (!this.authService.currentUserValue) {
+      // If not logged in, redirect to login page
+      alert('Please login first to proceed with checkout');
+      this.router.navigate(['/login']);
+      return;
+    }
+
     this.cartItems$ = this.cartService.cartItems;
     this.totalPrice$ = this.cartItems$.pipe(
       map(items => items.reduce((total, item) => total + (item.product.price * item.quantity), 0))

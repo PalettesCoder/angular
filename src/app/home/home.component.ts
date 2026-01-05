@@ -6,78 +6,100 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  currentBannerIndex = 0;
-  bannerInterval: any;
+  currentSlideIndex = 0;
+  sliderInterval: any;
+  totalSlides = 3;
 
   ngOnInit(): void {
-    this.startBannerCarousel();
+    this.startAutoSlide();
+    this.setupSliderEventListeners();
   }
 
   ngOnDestroy(): void {
-    if (this.bannerInterval) {
-      clearInterval(this.bannerInterval);
+    if (this.sliderInterval) {
+      clearInterval(this.sliderInterval);
     }
   }
 
   /**
-   * Starts auto-rotating the banner carousel every 5 seconds
+   * Start auto-rotating slides every 5 seconds
    */
-  startBannerCarousel(): void {
-    this.bannerInterval = setInterval(() => {
-      this.nextBanner();
+  startAutoSlide(): void {
+    this.sliderInterval = setInterval(() => {
+      this.nextSlide();
     }, 5000);
   }
 
   /**
-   * Moves to the next banner
+   * Move to the next slide
    */
-  nextBanner(): void {
-    const banners = document.querySelectorAll('.banner');
-    const indicators = document.querySelectorAll('.indicator');
-    
-    if (banners.length > 0) {
-      banners[this.currentBannerIndex].classList.remove('active');
-      indicators[this.currentBannerIndex].classList.remove('active');
-      
-      this.currentBannerIndex = (this.currentBannerIndex + 1) % banners.length;
-      
-      banners[this.currentBannerIndex].classList.add('active');
-      indicators[this.currentBannerIndex].classList.add('active');
-    }
+  nextSlide(): void {
+    this.currentSlideIndex = (this.currentSlideIndex + 1) % this.totalSlides;
+    this.updateSlider();
   }
 
   /**
-   * Moves to a specific banner by index
+   * Move to the previous slide
    */
-  goToBanner(index: number): void {
-    const banners = document.querySelectorAll('.banner');
+  previousSlide(): void {
+    this.currentSlideIndex = (this.currentSlideIndex - 1 + this.totalSlides) % this.totalSlides;
+    this.updateSlider();
+  }
+
+  /**
+   * Go to a specific slide
+   */
+  goToSlide(index: number): void {
+    this.currentSlideIndex = index;
+    this.updateSlider();
+  }
+
+  /**
+   * Update the slider display
+   */
+  private updateSlider(): void {
+    const slides = document.querySelectorAll('.hero-slide');
     const indicators = document.querySelectorAll('.indicator');
-    
-    if (banners.length > 0) {
-      banners[this.currentBannerIndex].classList.remove('active');
-      indicators[this.currentBannerIndex].classList.remove('active');
-      
-      this.currentBannerIndex = index;
-      
-      banners[this.currentBannerIndex].classList.add('active');
-      indicators[this.currentBannerIndex].classList.add('active');
-      
-      // Reset the interval
-      if (this.bannerInterval) {
-        clearInterval(this.bannerInterval);
+
+    slides.forEach((slide: any, index: number) => {
+      slide.classList.remove('active');
+      if (index === this.currentSlideIndex) {
+        slide.classList.add('active');
       }
-      this.startBannerCarousel();
-    }
+    });
+
+    indicators.forEach((indicator: any, index: number) => {
+      indicator.classList.remove('active');
+      if (index === this.currentSlideIndex) {
+        indicator.classList.add('active');
+      }
+    });
+
+    // Reset auto-slide timer
+    clearInterval(this.sliderInterval);
+    this.startAutoSlide();
+  }
+
+  /**
+   * Setup event listeners for slider controls
+   */
+  private setupSliderEventListeners(): void {
+    setTimeout(() => {
+      const nextBtn = document.querySelector('.hero-arrow.next') as HTMLElement;
+      const prevBtn = document.querySelector('.hero-arrow.prev') as HTMLElement;
+      const indicators = document.querySelectorAll('.indicator') as NodeListOf<HTMLElement>;
+
+      if (nextBtn) {
+        nextBtn.addEventListener('click', () => this.nextSlide());
+      }
+
+      if (prevBtn) {
+        prevBtn.addEventListener('click', () => this.previousSlide());
+      }
+
+      indicators.forEach((indicator: any, index: number) => {
+        indicator.addEventListener('click', () => this.goToSlide(index));
+      });
+    }, 100);
   }
 }
-
-// Make this function globally accessible for onclick handlers
-(window as any).currentBanner = (index: number) => {
-  const component = document.querySelector('app-home') as any;
-  if (component && component.__ngContext__) {
-    const ctx = component.__ngContext__[8];
-    if (ctx && ctx.component) {
-      ctx.component.goToBanner(index);
-    }
-  }
-};

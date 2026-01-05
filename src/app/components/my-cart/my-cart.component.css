@@ -1,13 +1,13 @@
 /* My Cart Component - Professional Ecommerce Design */
 :host {
-  --primary: #ff9900;
-  --primary-dark: #e68a00;
-  --text-dark: #0f1419;
-  --text-light: #565959;
-  --text-muted: #888888;
+  --primary: #F02757;
+  --primary-dark: #ea1044;
+  --text-dark: #1a1a1a;
+  --text-light: #666666;
+  --text-muted: #999999;
   --bg-light: #f5f5f5;
   --bg-lighter: #fafafa;
-  --border-color: #e8e8e8;
+  --border-color: #E4E4E4;
   --white: #ffffff;
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);

@@ -12,6 +12,8 @@ import { AuthService } from '../../services/auth.service';
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   errorMessage: string = '';
+  showPassword: boolean = false;
+  rememberMe: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -27,8 +29,20 @@ export class LoginComponent implements OnInit {
         Validators.required,
         Validators.minLength(6),
         Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/)
-      ]]
+      ]],
+      rememberMe: [false]
     });
+
+    // Load saved email if "Remember Me" was checked
+    const savedEmail = localStorage.getItem('savedEmail');
+    const savedRememberMe = localStorage.getItem('rememberMe') === 'true';
+    if (savedEmail && savedRememberMe) {
+      this.loginForm.patchValue({
+        email: savedEmail,
+        rememberMe: true
+      });
+      this.rememberMe = true;
+    }
   }
 
   /**
@@ -47,7 +61,16 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-    const { email, password } = this.loginForm.value;
+    const { email, password, rememberMe } = this.loginForm.value;
+
+    // Save email if "Remember Me" is checked
+    if (rememberMe) {
+      localStorage.setItem('savedEmail', email);
+      localStorage.setItem('rememberMe', 'true');
+    } else {
+      localStorage.removeItem('savedEmail');
+      localStorage.removeItem('rememberMe');
+    }
 
     this.authService.login(email, password).subscribe(
       success => {
@@ -62,5 +85,20 @@ export class LoginComponent implements OnInit {
         console.error('Login error:', error);
       }
     );
+  }
+
+  /**
+   * Toggles password visibility
+   */
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  /**
+   * Toggles remember me checkbox
+   */
+  toggleRememberMe(): void {
+    this.rememberMe = !this.rememberMe;
+    this.loginForm.patchValue({ rememberMe: this.rememberMe });
   }
 }

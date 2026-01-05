@@ -42,39 +42,30 @@
         <p>No products found. Try adjusting your filters.</p>
       </div>
 
-      <div class="product-grid">
-        <div *ngFor="let product of filteredProducts" class="product-card" [routerLink]="['/product', product.id]">
-          <div class="product-image-wrapper">
+      <div class="best-sellers-grid">
+        <div *ngFor="let product of filteredProducts" class="best-seller-card" [routerLink]="['/product', product.id]">
+          <div class="bs-image-container">
             <img 
               [src]="product.imageUrls[0]" 
               alt="{{ product.name }}"
-              class="product-image"
+              class="bs-product-image"
             >
-            <div *ngIf="product.badge" class="product-badge">{{ product.badge }}</div>
-            <div class="quick-actions">
-              <button class="action-btn" title="Quick View" (click)="$event.preventDefault(); quickViewProduct(product)">
-                <i class="fas fa-eye"></i>
-              </button>
-            </div>
+            <div *ngIf="product.badge" class="bs-badge">{{ product.badge }}</div>
           </div>
 
-          <div class="product-details" (click)="$event.preventDefault()">
-            <h3 class="product-name">{{ product.name }}</h3>
-            <p class="product-subtitle">{{ product.subtitle }}</p>
+          <div class="bs-product-info" (click)="$event.preventDefault()">
+            <p class="bs-product-category">{{ product.subtitle }}</p>
+            <h3 class="bs-product-name">{{ product.name }}</h3>
             
-            <div class="rating-section" *ngIf="product.rating">
-              <span class="rating">{{ product.rating }}</span>
-              <span class="stars">★★★★★</span>
-              <span class="reviews">({{ product.reviewCount }})</span>
+            <div class="bs-rating-box" *ngIf="product.rating">
+              <span class="bs-stars">★★★★★</span>
+              <span class="bs-review-count">{{ product.reviewCount }} Reviews</span>
             </div>
 
-            <div class="price-section">
-              <span class="price">₹{{ product.price | number:'1.2-2' }}</span>
+            <div class="bs-price-container">
+              <span class="bs-original-price">$904.21</span>
+              <span class="bs-sale-price">${{ product.price | number:'1.2-2' }}</span>
             </div>
-
-            <button class="add-to-cart-btn" (click)="$event.preventDefault()" title="Add to Cart">
-              <i class="fas fa-shopping-cart"></i> Add
-            </button>
           </div>
         </div>
       </div>

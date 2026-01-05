@@ -72,13 +72,23 @@
 
     <div class="form-group">
       <label for="password">Password:</label>
-      <input
-        id="password"
-        type="password"
-        formControlName="password"
-        class="input-field"
-        [ngClass]="{ 'is-invalid': f['password'].invalid && (f['password'].dirty || f['password'].touched) }"
-      />
+      <div class="password-input-wrapper">
+        <input
+          id="password"
+          [type]="showPassword ? 'text' : 'password'"
+          formControlName="password"
+          class="input-field"
+          [ngClass]="{ 'is-invalid': f['password'].invalid && (f['password'].dirty || f['password'].touched) }"
+        />
+        <button 
+          type="button" 
+          class="password-toggle-btn" 
+          (click)="togglePasswordVisibility()"
+          title="Toggle password visibility"
+        >
+          <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+        </button>
+      </div>
       <div *ngIf="f['password'].invalid && (f['password'].dirty || f['password'].touched)" class="error-message">
         <div *ngIf="f['password'].errors?.['required']">Password is required.</div>
         <div *ngIf="f['password'].errors?.['minlength']">Password must be at least 6 characters.</div>

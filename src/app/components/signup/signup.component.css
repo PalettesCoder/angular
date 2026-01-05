@@ -54,6 +54,39 @@
   box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
 }
 
+/* Password Input Wrapper */
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-wrapper .input-field {
+  flex: 1;
+  padding-right: 40px;
+  margin-bottom: 0;
+}
+
+/* Password Toggle Button */
+.password-toggle-btn {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--light-text-color);
+  font-size: 1.1em;
+  padding: 4px 8px;
+  transition: color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.password-toggle-btn:hover {
+  color: var(--primary-color);
+}
+
 .error-message {
   color: var(--danger-color);
   font-size: 0.85em;

@@ -18,6 +18,8 @@ export class SignupComponent implements OnInit {
 
   isModalOpen: boolean = false; // Controls signup validation error modal visibility
   modalMessages: string[] = []; // Messages to display in the modal
+  showPassword: boolean = false;
+  showConfirmPassword: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -159,6 +161,20 @@ export class SignupComponent implements OnInit {
   closeModal(): void {
     this.isModalOpen = false;
     this.modalMessages = [];
+  }
+
+  /**
+   * Toggles password visibility
+   */
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  /**
+   * Toggles confirm password visibility
+   */
+  toggleConfirmPasswordVisibility(): void {
+    this.showConfirmPassword = !this.showConfirmPassword;
   }
 }
 

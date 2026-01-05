@@ -4,13 +4,8 @@
   <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
       <label for="email">Email:</label>
-      <input
-        id="email"
-        type="email"
-        formControlName="email"
-        class="input-field"
-        [ngClass]="{ 'is-invalid': f['email'].invalid && (f['email'].dirty || f['email'].touched) }"
-      />
+      <input id="email" type="email" formControlName="email" class="input-field"
+        [ngClass]="{ 'is-invalid': f['email'].invalid && (f['email'].dirty || f['email'].touched) }" />
       <div *ngIf="f['email'].invalid && (f['email'].dirty || f['email'].touched)" class="error-message">
         <div *ngIf="f['email'].errors?.['required']">Email is required.</div>
         <div *ngIf="f['email'].errors?.['email']">Email must be a valid email address.</div>
@@ -19,25 +14,34 @@
 
     <div class="form-group">
       <label for="password">Password:</label>
-      <input
-        id="password"
-        type="password"
-        formControlName="password"
-        class="input-field"
-        [ngClass]="{ 'is-invalid': f['password'].invalid && (f['password'].dirty || f['password'].touched) }"
-      />
+      <div class="password-input-wrapper">
+        <input id="password" [type]="showPassword ? 'text' : 'password'" formControlName="password" class="input-field"
+          [ngClass]="{ 'is-invalid': f['password'].invalid && (f['password'].dirty || f['password'].touched) }" />
+        <button type="button" class="eye-toggle-btn" (click)="togglePasswordVisibility()"
+          title="Toggle password visibility">
+          <i  [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+        </button>
+      </div>
       <div *ngIf="f['password'].invalid && (f['password'].dirty || f['password'].touched)" class="error-message">
         <div *ngIf="f['password'].errors?.['required']">Password is required.</div>
         <div *ngIf="f['password'].errors?.['minlength']">Password must be at least 6 characters.</div>
-        <div *ngIf="f['password'].errors?.['pattern']">Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.</div>
+        <div *ngIf="f['password'].errors?.['pattern']">Password must contain at least one uppercase letter, one
+          lowercase letter, one number, and one special character.</div>
       </div>
+    </div>
+
+    <div class="form-group checkbox-group">
+      <label class="checkbox-label">
+        <input type="checkbox" formControlName="rememberMe" (change)="toggleRememberMe()" class="checkbox-input" />
+        <span class="checkbox-text">Remember me</span>
+      </label>
     </div>
 
     <div *ngIf="errorMessage" class="error-message login-error">
       {{ errorMessage }}
     </div>
 
-    <button type="submit" class="button" [disabled]="loginForm.invalid">Login</button>
+    <button type="submit" class="login-btn" [disabled]="loginForm.invalid">Login</button>
   </form>
   <p>Don't have an account? <a routerLink="/signup">Sign Up</a></p>
 </div>

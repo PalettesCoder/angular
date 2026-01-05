@@ -1,9 +1,11 @@
 // src/app/components/my-cart/my-cart.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CartService } from '../../services/cart.service';
+import { AuthService } from '../../services/auth.service';
 import { CartItem } from '../../models/cart-item.model';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-my-cart',
@@ -16,7 +18,7 @@ export class MyCartComponent implements OnInit {
   tax$: Observable<number> | undefined;
   totalWithTax$: Observable<number> | undefined;
 
-  constructor(private cartService: CartService) { }
+  constructor(private cartService: CartService, private authService: AuthService, private router: Router) { }
 
   ngOnInit(): void {
     this.cartItems$ = this.cartService.cartItems;
@@ -74,5 +76,18 @@ export class MyCartComponent implements OnInit {
    */
   getItemSubtotal(item: CartItem): number {
     return item.product.price * item.quantity;
+  }
+
+  /**
+   * Handles checkout button click - checks if user is logged in
+   */
+  proceedToCheckout(): void {
+    if (!this.authService.currentUserValue) {
+      alert('Please login first to proceed with checkout');
+      this.router.navigate(['/login']);
+      return;
+    }
+    // If logged in, navigate to checkout
+    this.router.navigate(['/checkout']);
   }
 }
